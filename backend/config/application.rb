@@ -8,6 +8,15 @@ Bundler.require(*Rails.groups)
 
 module Backend
   class Application < Rails::Application
+    config.active_record.query_log_tags_enabled = true
+    config.active_record.query_log_tags = [
+      # Rails query log tags:
+      :application, :controller, :action, :job,
+      # GraphQL-Ruby query log tags:
+      current_graphql_operation: -> { GraphQL::Current.operation_name },
+      current_graphql_field: -> { GraphQL::Current.field&.path },
+      current_dataloader_source: -> { GraphQL::Current.dataloader_source_class },
+    ]
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.1
 
@@ -28,5 +37,17 @@ module Backend
     # Middleware like session, flash, cookies can be added back manually.
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
+    # config.autoload_paths << Rails.root.join("app/graphql")
+    # config.autoload_paths << Rails.root.join("app/bounded_contexts")
+    config.eager_load_paths << Rails.root.join("app")
+
+     config.paths.add "app/bounded_contexts", eager_load: true
+    # config.paths.add "app/shared", eager_load: true
+    config.paths.add "app/graphql", eager_load: true
+
+    config.active_job.queue_adapter = :sidekiq
+    # config.to_prepare do
+    #   Rails.autoloaders.main.collapse(Rails.root.join("app/bounded_contexts"))
+    # end
   end
 end

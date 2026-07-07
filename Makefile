@@ -1,4 +1,7 @@
 up:
+	docker compose up
+
+up_build:
 	docker compose up --build
 
 down:
@@ -9,9 +12,6 @@ logs:
 
 backend:
 	docker compose exec backend bash
-
-frontend:
-	docker compose exec frontend sh
 
 db:
 	docker compose exec backend rails db:create db:migrate

@@ -53,6 +53,17 @@ services:
       DATABASE_USERNAME: postgres
       DATABASE_PASSWORD: postgres
       REDIS_URL: redis://redis:6379/0
+  # frontend:
+  #   build:
+  #     context: .
+  #     dockerfile: docker/frontend/Dockerfile
+  #   container_name: projectflow_frontend
+  #   volumes:
+  #     - ./frontend:/app
+  #   ports:
+  #     - "5173:5173"
+  #   stdin_open: true
+  #   tty: true
 volumes:
   postgres_data:
   redis_data:
