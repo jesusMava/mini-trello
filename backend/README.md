@@ -1,24 +1,98 @@
-# README
+# ProjectFlow
+A production-ready project management platform built with Ruby on Rails 8, GraphQL and React. [WIP]
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Inspired by Linear, Jira and Notion.
 
-Things you may want to cover:
+Designed using Modular Monolith Architecture, Vertical Slice and Lightweight DDD.
 
-* Ruby version
+Release 0.0.1 (Only basic API with GraphQL, Sidekiq, Redis, Event Bus)
+## Architecture
 
-* System dependencies
+Monolito modula
+111111111111111111r
+Vertical Slice
+DDD ligero
+Repository Pattern
+Use Cases
+DTOs
+Domain Services
+GraphQL
+Sidekiq
+Redis
 
-* Configuration
+### Diagrama de Carpetas
+Tasks
 
-* Database creation
+Application
+    DTO
+    UseCases
+    Events
 
-* Database initialization
+Domain
+    Services
+    Repositories
 
-* How to run the test suite
+Infrastructure
+    Subscribers
 
-* Services (job queues, cache servers, search engines, etc.)
+## Tech Stack
 
-* Deployment instructions
+| Backend | Frontend   | Infra          |
+| ------- | ---------- | -------------- |
+| Rails 8 | React      | Docker         |
+| GraphQL | TypeScript | PostgreSQL     |
+| JWT     | Vite       | Redis          |
+| Sidekiq |            | GitHub Actions |
 
-* ...
+# Sequence Diagram
+```mermaid
+Mutation --> UseCase
+
+UseCase --> Repository
+
+Repository --> PostgreSQL
+
+UseCase --> Event
+
+Event --> Subscriber
+
+Subscriber --> Sidekiq
+
+Sidekiq --> Redis
+```
+# How task move works
+Mutation
+↓
+MoveTaskUseCase
+↓
+PositionManager
+↓
+Repository
+↓
+Optimistic Lock
+↓
+Transaction
+↓
+TaskMoved Event
+↓
+Subscriber
+↓
+Sidekiq
+↓
+Redis
+
+# Folder Structure
+
+Getting Started
+
+Running Tests
+
+GraphQL API
+
+Authentication
+
+Architecture Decisions
+
+Sequence Diagrams
+
+Future Improvements

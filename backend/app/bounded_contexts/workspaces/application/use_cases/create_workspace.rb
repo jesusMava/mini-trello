@@ -3,7 +3,7 @@ module Workspaces
     module UseCases
       class CreateWorkspace < Shared::Application::ApplicationUseCase
         def initialize(
-          repository: Workspaces::Infrastructure::Repositories::WorkspaceRepository.new
+          repository: Container.workspace_repository
         )
           @repository = repository
         end

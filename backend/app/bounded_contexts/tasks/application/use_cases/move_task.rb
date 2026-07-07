@@ -4,9 +4,7 @@ module Tasks
       class MoveTask
         def initialize(
           task_repository: Container.task_repository,
-          position_manager: Tasks::Domain::Services::PositionManager.new(
-            task_repository: Container.task_repository
-          ),
+          position_manager: Container.task_position_manager,
           event_bus: Container.event_bus
         )
           @task_repository = task_repository

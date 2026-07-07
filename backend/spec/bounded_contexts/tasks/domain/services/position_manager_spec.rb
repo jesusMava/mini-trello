@@ -8,7 +8,7 @@ RSpec.describe Tasks::Domain::Services::PositionManager do
   end
 
   let(:repository) do
-    Tasks::Infrastructure::Repositories::TaskRepository.new
+    Container.task_repository
   end
   let(:owner) { create(:user) }
   let(:workspace) do

@@ -24,7 +24,7 @@ module Identity
 
           token = @encoder.call(user)
 
-          Dto::LoginResponse.new(
+          Dto::LoginResponse.success(
             user: user,
             token: token
           )

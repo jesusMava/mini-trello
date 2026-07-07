@@ -24,7 +24,7 @@ module Tasks
             )
 
           result =
-            Tasks::Application::UseCase::CreateTask
+            Tasks::Application::UseCases::CreateTask
               .new
               .call(request)
 

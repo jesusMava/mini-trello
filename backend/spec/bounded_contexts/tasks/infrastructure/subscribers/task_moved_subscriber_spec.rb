@@ -20,6 +20,6 @@ RSpec.describe Tasks::Infrastructure::Subscribers::TaskMovedSubscriber do
 
     expect(TaskMovedJob)
       .to have_received(:perform_async)
-      .with(hash_including(task_id: 1))
+      .with(hash_including("task_id" => 1))
   end
 end

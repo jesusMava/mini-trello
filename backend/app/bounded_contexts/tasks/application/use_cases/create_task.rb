@@ -3,8 +3,8 @@ module Tasks
     module UseCases
       class CreateTask
         def initialize(
-          project_repository: Projects::Infrastructure::Repositories::ProjectRepository.new,
-          task_repository: Tasks::Infrastructure::Repositories::TaskRepository.new
+          project_repository: Container.project_repository,
+          task_repository: Container.task_repository
         )
           @project_repository = project_repository
           @task_repository = task_repository
