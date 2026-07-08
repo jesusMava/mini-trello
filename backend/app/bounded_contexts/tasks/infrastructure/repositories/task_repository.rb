@@ -49,15 +49,20 @@ module Tasks
             .order(:position)
         end
 
-        def find_accessible_by_owner(task_id:, owner_id:)
+        def find_accessible_by_owner(project_id:, task_id:, owner_id:)
             Task
-            .joins(project: :workspace)
-            .find_by(
-              id: task_id,
-              workspaces: {
-                owner_id: owner_id
-              }
-            )
+              .joins(project: :workspace)
+              .where(
+                id: task_id,
+                project_id: project_id
+              )
+              .where(workspaces: { owner_id: owner_id })
+              .first
+        end
+
+        def all_by_project(project_id:)
+          Task.where(project_id: project_id)
+              .order(:position)
         end
 
         private

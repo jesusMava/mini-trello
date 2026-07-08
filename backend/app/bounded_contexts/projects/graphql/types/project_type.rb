@@ -6,6 +6,9 @@ module Projects
 
         field :id, ID, null: false
         field :name, String, null: false
+        field :workspace,
+              Workspaces::GraphQL::Types::WorkspaceType,
+              null: false
       end
     end
   end

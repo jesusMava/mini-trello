@@ -49,6 +49,7 @@ module Tasks
 
         def load_task(request)
           task_repository.find_accessible_by_owner(
+            project_id: request.project_id,
             task_id: request.task_id,
             owner_id: request.owner_id
           )

@@ -9,5 +9,7 @@ module Types
     end
 
     field :me, resolver: Identity::GraphQL::Resolvers::MeResolver
+    field :tasks,
+          resolver: Tasks::GraphQL::Resolvers::TasksResolver
   end
 end

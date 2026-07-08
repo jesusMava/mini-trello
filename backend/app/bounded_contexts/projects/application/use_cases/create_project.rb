@@ -3,7 +3,8 @@ module Projects
     module UseCases
       class CreateProject < Shared::Application::ApplicationUseCase
         def initialize(
-          workspace_repository: Container.workspace_repository
+          workspace_repository: Container.workspace_repository,
+          project_repository: Container.project_repository
         )
           @workspace_repository = workspace_repository
           @project_repository = project_repository

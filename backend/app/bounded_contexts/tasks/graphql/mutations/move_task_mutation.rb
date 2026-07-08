@@ -6,6 +6,7 @@ module Tasks
       class MoveTaskMutation < ::Mutations::BaseMutation
         graphql_name "MoveTask"
 
+        argument :project_id, ID, required: true
         argument :task_id, ID, required: true
         argument :new_position, Integer, required: true
 
@@ -14,10 +15,11 @@ module Tasks
               null: true
         field :errors, [ String ], null: false
 
-        def resolve(task_id:, new_position:)
+        def resolve(project_id:, task_id:, new_position:)
           owner = require_current_user!
           request =
             Tasks::Application::Dto::MoveTaskRequest.new(
+              project_id: project_id,
               task_id: task_id,
               owner_id: owner.id,
               new_position: new_position

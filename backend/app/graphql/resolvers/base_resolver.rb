@@ -11,5 +11,10 @@ module Resolvers
     def authenticate!
       raise GraphQL::ExecutionError, "Unauthorized" unless current_user
     end
+
+    def require_current_user!
+      authenticate!
+      current_user
+    end
   end
 end
