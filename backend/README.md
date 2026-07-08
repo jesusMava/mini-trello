@@ -7,7 +7,7 @@ Release 0.0.1 (Only basic API with GraphQL, Sidekiq, Redis, Event Bus)
 ## Architecture
 
 * Modular Monolith
-* DDD-lite
+* DDD
 * Vertical Slice
 * Repository Pattern
 * Use Cases
@@ -31,6 +31,10 @@ Domain
 
 Infrastructure
     Subscribers
+
+GraphQL
+    mutations
+    types
 ```
 ## Tech Stack
 
