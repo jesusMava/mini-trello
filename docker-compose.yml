@@ -21,8 +21,8 @@ services:
       - redis_data:/data
   backend:
     build:
-      context: .
-      dockerfile: docker/backend/Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: projectflow_backend
     volumes:
       - ./backend:/rails
@@ -40,8 +40,8 @@ services:
       REDIS_URL: redis://redis:6379/0
   sidekiq:
     build:
-      context: .
-      dockerfile: docker/backend/Dockerfile
+      context: ./backend
+      dockerfile: Dockerfile
     command: bundle exec sidekiq
     volumes:
       - ./backend:/rails
