@@ -21,6 +21,7 @@ RSpec.describe Tasks::Application::UseCases::MoveTask do
 
   let(:request) do
     Tasks::Application::Dto::MoveTaskRequest.new(
+      project_id: 1,
       task_id: 10,
       owner_id: 20,
       new_position: 3
@@ -110,6 +111,7 @@ RSpec.describe Tasks::Application::UseCases::MoveTask do
     expect(repository)
       .to have_received(:find_accessible_by_owner)
       .with(
+        project_id: 1,
         task_id: 10,
         owner_id: 20
       )

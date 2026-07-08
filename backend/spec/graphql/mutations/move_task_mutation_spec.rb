@@ -42,6 +42,7 @@ RSpec.describe "MoveTaskMutation", type: :request do
       mutation {
         moveTask(
           input: {
+            projectId: "#{project.id}",
             taskId: "#{task1.id}"
             newPosition: 2
           }
@@ -59,6 +60,7 @@ RSpec.describe "MoveTaskMutation", type: :request do
   let(:wrong_task_id_mutation) do
     mutation {
       moveTask(
+        projectId: "#{project.id}",
         taskId: "99999",
         newPosition: 1
       ) {
