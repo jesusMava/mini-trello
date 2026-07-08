@@ -13,6 +13,25 @@ module Tasks
         def success?
           errors.empty?
         end
+
+        def success?
+          errors.empty?
+        end
+
+        def failure?
+          !success?
+        end
+
+        def self.success(task)
+          new(task: task)
+        end
+
+        def self.failure(errors)
+          new(
+            task: nil,
+            errors: Array(errors)
+          )
+        end
       end
     end
   end

@@ -21,14 +21,13 @@ module Tasks
             project: project
           )
 
-          Dto::CreateTaskResponse.new(
-            task: task
+          Dto::CreateTaskResponse.success(
+            task
           )
 
         rescue ActiveRecord::RecordInvalid => e
-          Dto::CreateTaskResponse.new(
-            task: nil,
-            errors: e.record.errors.full_messages
+          Dto::CreateTaskResponse.failure(
+            e.record.errors.full_messages
           )
         end
 
@@ -42,11 +41,8 @@ module Tasks
         end
 
         def project_not_found
-          Dto::CreateTaskResponse.new(
-            task: nil,
-            errors: [
+          Dto::CreateTaskResponse.failure(
               "Project not found or access denied"
-            ]
           )
         end
       end
