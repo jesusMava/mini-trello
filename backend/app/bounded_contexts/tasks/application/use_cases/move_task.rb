@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Tasks
   module Application
     module UseCases
@@ -5,39 +7,59 @@ module Tasks
         def initialize(
           task_repository: Container.task_repository,
           position_manager: Container.task_position_manager,
-          event_bus: Container.event_bus
+          snapshot_builder: Tasks::Domain::Services::TaskSnapshotBuilder.new,
+          outbox_event_repository: Container.outbox_event_repository
         )
           @task_repository = task_repository
           @position_manager = position_manager
-          @event_bus = event_bus
+          @snapshot_builder = snapshot_builder
+          @outbox_event_repository = outbox_event_repository
         end
 
         def call(request)
           task = load_task(request)
-          return not_found unless task
 
-          old_position = task.position
+          return task_not_found unless task
 
-          position_manager.move(
-            task: task,
-            new_position: request.new_position
-          )
+          ActiveRecord::Base.transaction do
+            old_position = task.position
 
-          event =
-            Tasks::Application::Events::TaskMoved.new(
-              task_id: task.id,
-              project_id: task.project_id,
+            move_task(
+              task: task,
+              new_position: request.new_position
+            )
+
+            event = build_task_moved(
+              task: task,
               old_position: old_position,
-              new_position: task.position,
-              user_id: request.owner_id
+              new_position: request.new_position
+            )
+
+            envelope =
+              Shared::Events::EventEnvelopeFactory.call(event)
+
+            @outbox_event_repository.create!(
+              envelope: envelope
+            )
+          end
+
+          Dto::MoveTaskResponse.new(
+            task: task,
+            errors: []
           )
 
-          event_bus.publish(event)
-
-          Dto::MoveTaskResponse.success(task)
         rescue ActiveRecord::StaleObjectError
-          Dto::MoveTaskResponse.failure(
-            "The task was modified by another user. Please reload and try again."
+          Dto::MoveTaskResponse.new(
+            task: nil,
+            errors: [
+              "Task was modified by another request"
+            ]
+          )
+
+        rescue ActiveRecord::RecordInvalid => e
+          Dto::MoveTaskResponse.new(
+            task: nil,
+            errors: e.record.errors.full_messages
           )
         end
 
@@ -45,7 +67,8 @@ module Tasks
 
         attr_reader :task_repository,
                     :position_manager,
-                    :event_bus
+                    :snapshot_builder,
+                    :outbox_event_repository
 
         def load_task(request)
           task_repository.find_accessible_by_owner(
@@ -55,8 +78,34 @@ module Tasks
           )
         end
 
-        def not_found
-          Dto::MoveTaskResponse.failure("Task not found")
+        def move_task(task:, new_position:)
+          position_manager.move(
+            task: task,
+            new_position: new_position
+          )
+        end
+
+        def build_task_moved(
+          task:,
+          old_position:,
+          new_position:
+        )
+          Tasks::Application::Events::TaskMoved.new(
+            task_id: task.id,
+            project_id: task.project_id,
+            old_position: old_position,
+            new_position: new_position,
+            snapshot: snapshot_builder.call(task)
+          )
+        end
+
+        def task_not_found
+          Dto::MoveTaskResponse.new(
+            task: nil,
+            errors: [
+              "Task not found or access denied"
+            ]
+          )
         end
       end
     end

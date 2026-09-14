@@ -3,27 +3,41 @@
 module Tasks
   module Application
     module Events
-      class TaskMoved < Shared::Events::Event
+      class TaskMoved
         attr_reader :task_id,
                     :project_id,
                     :old_position,
                     :new_position,
-                    :user_id,
-                    :occurred_at
+                    :snapshot
 
         def initialize(
           task_id:,
           project_id:,
           old_position:,
           new_position:,
-          user_id:
+          snapshot:
         )
           @task_id = task_id
           @project_id = project_id
           @old_position = old_position
           @new_position = new_position
-          @user_id = user_id
-          @occurred_at = Time.current
+          @snapshot = snapshot
+        end
+
+        def event_type
+          "task.moved"
+        end
+
+        def version
+          1
+        end
+
+        def aggregate_type
+          "Task"
+        end
+
+        def aggregate_id
+          task_id
         end
       end
     end
